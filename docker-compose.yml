@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  selenium-fastapi: 
+    build:
+      context: "./"
+      dockerfile: "Dockerfile"
+      args:
+        - PYTHON_VERSION
+    hostname: selenium-fastapi
+    restart: unless-stopped
+    env_file:
+      - '.env'
+    expose:
+      - "4400"
+    tty: true

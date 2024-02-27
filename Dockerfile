@@ -19,8 +19,8 @@ WORKDIR /app
 # Copy content of app to /app
 COPY ./app ./
 
-# Copy the requirements file
-COPY ./requirements.txt ./requirements.txt
+# # Copy the requirements file
+# COPY ./requirements.txt ./requirements.txt
 
 # Install the requirements
 RUN pip3 install -r ./requirements.txt
