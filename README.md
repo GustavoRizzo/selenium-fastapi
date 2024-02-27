@@ -22,3 +22,10 @@ vi .env
 make up # production
 make up-dev # development
 ```
+
+## Run the script
+    
+```shell
+make run_script_save_printscreen_page # production
+make run_script_save_printscreen_page-dev # development
+```

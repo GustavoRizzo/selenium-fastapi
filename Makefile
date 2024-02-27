@@ -12,6 +12,9 @@ DOCKER_COMPOSE_DEV=${DOCKER_COMPOSE} -f docker-compose-dev.yml
 SERVICES ?= ${BACKEND_SERVICE}
 SERVICES_DEV ?= ${BACKEND_SERVICE}-dev
 
+NAME_CONTAINER = selenium-fastapi-selenium-fastapi-1
+NAME_CONTAINER_DEV ?= selenium-fastapi-selenium-fastapi-dev-1
+
 all: help
 
 checkout:  ## Checkout a new source version. Using: REPO_BRANCH
@@ -49,50 +52,13 @@ restart-dev:  ## Restart services (or one service specified). Using: SERVICES_DE
 stop-dev:  ## Restart service service. Using: SERVICES_DEV
 	@${DOCKER_COMPOSE_DEV} stop ${SERVICES_DEV}
 
-test:  ## Run tests
-	@echo ${DOCKER_COMPOSE_DEV} run --rm ${SERVICES_DEV} python manage.py test --settings=core.settings_test
-	@${DOCKER_COMPOSE_DEV} run --rm ${SERVICES_DEV} python manage.py test --settings=core.settings_test
+run_script_save_printscreen_page:
+	@echo "Running script to save printscreen page"
+	@docker exec -it ${NAME_CONTAINER_DEV} python ./scripts/save_printscreen_page.py
 
-reset-local-db:
-	@echo "Reset database..."
-	@${DOCKER_COMPOSE} run --rm ${BACKEND_SERVICE} python manage.py reset_db
-
-reset-db: reset-local-db migrate seed create-superuser  ## Reset and restore initial DB
-	@echo "Resetting and restoring initial database..."
-
-create-superuser: ## Create a superuser
-	@${DOCKER_COMPOSE} run --rm ${BACKEND_SERVICE} python manage.py createsuperuser
-
-static-dir:  ## Create the static directory
-	@echo "Create statics files..."
-	@${DOCKER_COMPOSE} run --rm ${BACKEND_SERVICE} python manage.py collectstatic --noinput
-
-setup: migrate create-superuser static-dir  ## Setup the database container and data
-	@echo "Running project setup"
-
-migrate: ## Run migrations
-	@${DOCKER_COMPOSE} run --rm ${BACKEND_SERVICE} python manage.py migrate
-
-create: build setup up  ## Create an environment
-	@echo "Create docker environment"
-
-restart: build migrate up  ## Restart docker environment
-	@echo "Restarting docker environment"
-
-stop:  ## Stop environment
-	@echo "Shutting down..."
-	@${DOCKER_COMPOSE} down
-	@echo "Done."
-
-deploy-dev: version  ## Deploy/update service DEV container/service
-	@echo "Deploy/update service site"
-	@${DOCKER_COMPOSE_DEV} build --no-cache ${SERVICES_DEV}
-	@${DOCKER_COMPOSE_DEV} up -d --force-recreate ${SERVICES_DEV}
-
-deploy: version  ## Deploy/update service container/service
-	@echo "Deploy/update service site"
-	@${DOCKER_COMPOSE} build --no-cache ${SERVICES}
-	@${DOCKER_COMPOSE} up -d --force-recreate ${SERVICES}
+run_script_save_printscreen_page-dev:
+	@echo "Running script to save printscreen page on development environment"
+	@docker exec -it ${NAME_CONTAINER_DEV} python ./scripts/save_printscreen_page.py
 
 version:  ## Get version
 	@$(eval SYSTEM_VERSION = $(shell git describe --tag --dirty=-local-changes --always))
