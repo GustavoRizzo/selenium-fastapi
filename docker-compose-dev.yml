@@ -7,7 +7,7 @@ services:
       service: selenium-fastapi 
     hostname: selenium-fastapi-dev
     ports:
-      - "${DOCKER_SELENIUM_PORT:-4400}:4400"
+      - "${DOCKER_SELENIUM_PORT:-4404}:4404"
     volumes:
       - "./app:/app"
     # Force the container to stay alive

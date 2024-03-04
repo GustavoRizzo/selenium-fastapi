@@ -1,16 +1,15 @@
-# Create the base image
-FROM selenium/standalone-chrome:latest
-
-USER root
+# Use a imagem oficial do Python
+FROM python:3.12-alpine
 
 # Update the package list
-RUN apt-get update
+RUN apk update && apk upgrade
 
-# Alais python3 to python
-RUN ln -s /usr/bin/python3 /usr/bin/python
+# Install chromium, chromium-chromedriver, xvfb, curl, unzip, libexif, udev
+RUN apk add curl unzip libexif udev chromium chromium-chromedriver xvfb
 
-# Install pip
-RUN apt install python3-pip -y
+# RUN pip install --no-cache-dir \
+#     selenium \
+#     webdriver-manager
 
 # Make dir app
 RUN mkdir /app
@@ -19,8 +18,11 @@ WORKDIR /app
 # Copy content of app to /app
 COPY ./app ./
 
-# # Copy the requirements file
-# COPY ./requirements.txt ./requirements.txt
-
 # Install the requirements
 RUN pip3 install -r ./requirements.txt
+
+# Exponha a porta do FastAPI
+EXPOSE 8000
+
+# Comando para executar o aplicativo FastAPI
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "4404"]

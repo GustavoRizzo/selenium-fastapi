@@ -11,6 +11,6 @@ services:
     restart: unless-stopped
     env_file:
       - '.env'
-    expose:
-      - "4400"
+    ports:
+      - "${DOCKER_SELENIUM_PORT:-4404}:4404"
     tty: true
