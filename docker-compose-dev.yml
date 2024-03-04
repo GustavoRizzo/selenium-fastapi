@@ -2,9 +2,9 @@ version: "3.9"
 
 services:
   selenium-fastapi-dev:
-    extends:
-      file: docker-compose.yml
-      service: selenium-fastapi 
+    build:
+      context: .
+      target: dev
     hostname: selenium-fastapi-dev
     ports:
       - "${DOCKER_SELENIUM_PORT:-4404}:4404"

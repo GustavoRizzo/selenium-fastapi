@@ -3,7 +3,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 print("Start Script")
 
-URL_PAGE = "https://www.google.com"
+URL_PAGE = "https://www.horariodebrasilia.org/"
 
 # Chrome options
 chrome_options = webdriver.ChromeOptions()
@@ -17,6 +17,7 @@ try:
     ############################################
     print("Starting driver...")
     driver = webdriver.Chrome(options=chrome_options)
+    # driver = webdriver.Chrome(ChromeDriverManager().install())
     print("Driver started")
 
     try:
@@ -37,6 +38,7 @@ try:
             # save screenshot
             with open(f"{DIR_MEDIA}/screenshot.png", "wb") as f:
                 f.write(screenshot)
+            print("Screenshot saved")
         except Exception as screenshot_error:
             print(f"Error taking screenshot: {screenshot_error}")
     except Exception as page_error:
